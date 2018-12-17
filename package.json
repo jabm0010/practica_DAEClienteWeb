@@ -1,0 +1,8 @@
+{
+    "name": "practica_DAEClienteWeb",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser"],
+    "author": "jabm9",
+    "contributors": [],
+    "dependencies": {}
+}

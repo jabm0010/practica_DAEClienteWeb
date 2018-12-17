@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+        <script src="controllers.js"></script>
+    </head>
+    <body data-ng-app="eventosApp" data-ng-controller="eventosController as $ctrl">
+        <div>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="#">EventosUJA</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Mis eventos organizados
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <button data-ng-click="$ctrl.verEventosOrganizados('futuro')" class="dropdown-item" type="submit">Eventos organizados futuros</button>
+                                <button data-ng-click="$ctrl.verEventosOrganizados('pasado')" class="dropdown-item" type="submit">Eventos organizados ya celebrados</button>
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Mis eventos inscritos
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <button data-ng-click="$ctrl.verEventosInscritos('futuro')" class="dropdown-item" type="submit">Eventos inscritos futuros futuros</button>
+                                <button data-ng-click="$ctrl.verEventosInscritos('pasado')" class="dropdown-item" type="submit">Eventos inscritos ya celebrados</button>
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Eventos por tipo
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <button data-ng-click="$ctrl.verEventosTipo('CHARLA')" class="dropdown-item" type="submit">Charla</button>
+                                <button data-ng-click="$ctrl.verEventosTipo('CURSO')" class="dropdown-item" type="submit">Curso</button>
+                                <button data-ng-click="$ctrl.verEventosTipo('ACTIVIDAD_DEPORTIVA')" class="dropdown-item" type="submit">Actividad deportiva</button>
+                                <button data-ng-click="$ctrl.verEventosTipo('VISITA_CULTURAL')" class="dropdown-item" type="submit">Visita cultural</button>
+
+                            </div>
+                        </li>
+
+                        <a class="nav-item nav-link" href="login.html">Login</a>
+                        <a class="nav-item nav-link" href="registro.html">Registro</a>
+
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input data-ng-model="$ctrl.palabras" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Buscar...">
+                        <button data-ng-click="$ctrl.verEventosPalabras()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </nav>
+
+        </div>
+
+        <div>
+            <div class="row" style="margin-top:15px;">
+                <section class="col-md-1"></section>
+                <section class="jumbotron col-md-10">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="inputDescripcion">Descripcion</label>
+                                <input data-ng-model="$ctrl.descripcion" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputLugar">Lugar</label>
+                                <input data-ng-model="$ctrl.lugar" type="text" class="form-control" >
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="inputFecha">Fecha</label>
+                                <input data-ng-model="$ctrl.fecha" type="text" class="form-control">
+                            </div>
+                        </div>
+ 
+                        <button data-ng-click="$ctrl.creaEvento()" type="submit" class="btn btn-primary">Sign in</button>
+                    </form>
+                </section>
+            </div>
+
+
+            <div class="row" style="margin-top:15px;">
+                <section class="col-md-1"></section>
+                <section class="col-md-10">
+
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr><th>Descripción</th><th>Fecha</th><th>Lugar</th><th>Nº de asistentes máximo</th> <th>Organizador</th> <th>Tipo de evento</th>
+
+                            </tr>
+                        </thead>
+                        <tr class="e-pointer" data-ng-repeat="e in $ctrl.listaEventos">
+                            <td>{{e.id}}></td> <td>{{e.fecha}}</td> <td>{{e.lugar}}</td> <td>{{e.numeroMaxAsistentes}}</td> <td>{{e.organizador}}</td><td>{{e.tipo}}</td>
+                            <td><button type="button" class="btn btn-primary">Inscribirme</button></td><td><button type="button" class="btn btn-danger">Cancelar inscripcion</button></td>
+                            <td><button type="button" class="btn btn-dark">Cancelar evento</button></td>
+                        </tr>
+                    </table>
+
+
+
+
+
+                </section>    
+            </div>
+
+        </div>
+
+
+    </body>
+</html>
