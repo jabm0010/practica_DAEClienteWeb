@@ -20,7 +20,7 @@ and open the template in the editor.
 
 
     </head>
-    <body>
+    <body data-ng-app="eventosApp" data-ng-controller="eventosController as $ctrl">
         <div>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a class="navbar-brand" href="#">EventosUJA</a>
@@ -40,15 +40,15 @@ and open the template in the editor.
                 <form>
                     <div class="form-group">
                         <label for="nombreUsuario">Nombre</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Nombre">
+                        <input data-ng-model="$ctrl.nombreLog" type="text" class="form-control" id="exampleInputEmail1"  placeholder="Nombre">
                        
                     </div>
                     <div class="form-group">
                         <label for="pwdUsuario">Contraseña</label>
-                        <input type="password" class="form-control" id="pwdUsuario" placeholder="Contraseña">
+                        <input data-ng-model="$ctrl.pwdLog" type="password" class="form-control" id="pwdUsuario" placeholder="Contraseña">
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button data-ng-click="$ctrl.introducirCredenciales()" type="submit" class="btn btn-primary">Login</button>
                 </form>
 
             </section>

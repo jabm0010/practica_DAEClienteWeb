@@ -1,24 +1,21 @@
-
-'use strict'
-
 class EventosDAO
 {
     constructor()
     {
         this.valid = false;
-        this.url_evento = "https://localhost:8443/evento";
+        this.url_evento = "https://localhost:8443/eventos";
     }
 
     eventosPalabra(palabras)
     {
-        // let query_string = "";
-        let query_string = "palabras=" + palabras;
-//        for (let i in palabras)
-//        {
-//            query_string += "palabras=" + palabras[i] + "&";
-//            if (i == palabras.length - 1)
-//                query_string += "palabras=" + palabras[i];
-//        }
+        let query_string = "";
+
+        for (let i in palabras)
+        {
+            query_string += "palabras=" + palabras[i] + "&";
+            if (i == palabras.length - 1)
+                query_string += "palabras=" + palabras[i];
+        }
 
         return fetch(this.url_evento + "?" + query_string)
                 .then(response => this.getStatus(response))
@@ -35,7 +32,7 @@ class EventosDAO
 
     obtenerEventoTipo(tipo)
     {
-        return fetch(this.url_evento + "/tipo/" + tipo)
+        return fetch(this.url_evento + "?tipo=" + tipo)
                 .then(response => this.getStatus(response))
                 .then(response => this.checkResponse(response));
     }
@@ -59,12 +56,58 @@ class EventosDAO
     }
 }
 
+class UsuarioPublicDAO {
+
+    constructor()
+    {
+        this.valid = false;
+        this.url_usuario = "https://localhost:8443/usuarios";
+
+    }
+    registrarUsuario(usuario, nombre)
+    {
+        let query_url = this.url_usuario + "/" + nombre;
+        return fetch(query_url,
+                {
+
+                    method: 'post',
+                    headers: new Headers({
+
+                        'Content-Type': 'application/json',
+                    }),
+                    body: JSON.stringify(usuario)
+                })
+
+                .then(response => this.getStatus(response))
+                .then(response => this.checkResponse(response));
+    }
+
+    /**
+     * Save response status and returns object data
+     * @param {response} response
+     * @returns {json}
+     */
+    getStatus(response) {
+        this.valid = response.ok;
+        // TODO Check Network Errors
+        return response.json();
+    }
+
+    checkResponse(json) {
+        if (!this.valid)
+            return Promise.reject(json);
+
+        return json;
+    }
+}
+
+
 class UsuarioDAO
 {
     constructor(usuario, clave)
     {
         this.valid = false;
-        this.url_usuario = "https://localhost:8443/usuario";
+        this.url_usuario = "https://localhost:8443/usuarios";
         this.usuario = usuario;
         this.clave = clave;
     }
@@ -78,7 +121,24 @@ class UsuarioDAO
 
     eventosInscritos(tiempo)
     {
-        let query_url = this.url_usuario + "/" + this.usuario + "/evento/inscrito";
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/inscritos";
+        if (tiempo)
+            query_url += "?tiempo=" + tiempo;
+
+        return fetch(query_url,
+                {
+                    method: 'get',
+                    headers: new Headers({
+                        'Authorization': 'Basic ' + btoa(this.usuario + ":" + this.clave)
+                    })
+                })
+                .then(response => this.getStatus(response))
+                .then(response => this.checkResponse(response));
+    }
+
+    listaEspera(tiempo)
+    {
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/listaespera";
         if (tiempo)
             query_url += "?tiempo=" + tiempo;
 
@@ -95,7 +155,7 @@ class UsuarioDAO
 
     eventosOrganizados(tiempo)
     {
-        let query_url = this.url_usuario + "/" + this.usuario + "/evento/organizado";
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/organizados";
         if (tiempo)
             query_url += "?tiempo=" + tiempo;
 
@@ -112,7 +172,7 @@ class UsuarioDAO
 
     cancelarEvento(id)
     {
-        let query_url = this.url_usuario + "/" + this.usuario + "/evento/organizado/" + id;
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/organizados/" + id;
 
         return fetch(query_url,
                 {
@@ -127,7 +187,7 @@ class UsuarioDAO
 
     cancelarInscripcionEvento(id)
     {
-        let query_url = this.url_usuario + "/" + this.usuario + "/evento/inscrito/" + id;
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/inscritos/" + id;
 
         return fetch(query_url,
                 {
@@ -140,33 +200,9 @@ class UsuarioDAO
                 .then(response => this.checkResponse(response));
     }
 
-    registrarUsuario(usuario)
-    {
-        let query_url = this.url_usuario + "/" + usuario.nombre;
-        return fetch(query_url,
-                {
-                    method: 'post',
-                    body: usuario.json()
-                })
-                .then(response => this.getStatus(response))
-                .then(response => this.checkResponse(response));
-    }
-
-    login(usuario)
-    {
-        let query_url = this.url_usuario + "/login/" + usuario.nombre;
-        return fetch(query_url,
-                {
-                    method: 'post',
-                    body: usuario.json()
-                })
-                .then(response => this.getStatus(response))
-                .then(response => this.checkResponse(response));
-    }
-
     crearEvento(evento)
     {
-        let query_url = this.url_usuario + "/" + this.usuario + "/evento";
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/organizados";
 
         return fetch(query_url,
                 {
@@ -174,7 +210,6 @@ class UsuarioDAO
                     headers: new Headers({
                         'Authorization': 'Basic ' + btoa(this.usuario + ":" + this.clave),
                         'Content-Type': 'application/json',
-                        
                     }),
                     body: JSON.stringify(evento)
                 })
@@ -184,7 +219,7 @@ class UsuarioDAO
 
     inscribirseEvento(id)
     {
-        let query_url = this.url_usuario + "/" + this.usuario + "/evento/inscrito/" + id;
+        let query_url = this.url_usuario + "/" + this.usuario + "/eventos/inscritos/" + id;
 
         return fetch(query_url,
                 {
@@ -197,6 +232,7 @@ class UsuarioDAO
                 .then(response => this.getStatus(response))
                 .then(response => this.checkResponse(response));
     }
+
     /**
      * Save response status and returns object data
      * @param {response} response
@@ -232,21 +268,34 @@ class eventosController {
 //        ];
         // this.listaEventos = [{"id":2,"fecha":"2019-12-21T00:00:00.000+0000","lugar":"lugar","tipo":"CHARLA","descripcion":"descripcion","numeroMaxAsistentes":21,"organizador":"pepe"},{"id":8,"fecha":"2020-12-14T11:05:43.275+0000","lugar":"jaen","tipo":"CHARLA","descripcion":"p","numeroMaxAsistentes":30,"organizador":"pepe"},{"id":10,"fecha":"2027-04-04T03:06:00.000+0000","lugar":"7","tipo":"CHARLA","descripcion":"8","numeroMaxAsistentes":20,"organizador":"pepe"}];
         this.$scope = $scope;
+        this.nombre;
+        this.pwd;
         this.listaEventos = [];
         this.eventosDAO = new EventosDAO();
-        this.usuariosDAO = new UsuarioDAO("pepe", "abc");
+        this.usuariosDAO = new UsuarioDAO(this.nombre, this.pwd);
+        this.usuarioPublicDAO = new UsuarioPublicDAO();
         //this.obtenerEvento();
         this.nuevoevento = {};
-        this.url_evento = "http://localhost:8080/evento";
-        this.palabras = {};
-        
-        
+        // this.url_evento = "http://localhost:8080/evento";
+        this.palabras = [];
+
+        this.tituloTabla;
+
+        //Variables creación evento
         this.descripcion;
         this.numAsistentes;
         this.lugar;
-        this.fecha;
         this.tipo;
         this.nuevoEvento;
+        this.anio;
+        this.mes;
+        this.dia;
+        this.hora;
+        this.minutos;
+
+        this.nombreUsuarionuevo;
+        this.pwdNuevoUsuario;
+        this.emailNuevoUsuario;
 
     }
     visualiza(evento) {
@@ -257,21 +306,39 @@ class eventosController {
         this.listaEventos = evento;
     }
 
-    creaEvento() {
-       // let nuevoEvento = {"descripcion" : this.descripcion, "fecha": "2019-12-21T00:00:00.000+0000", "lugar": this.lugar, "numeroMaxAsistentes" : "23", "organizador" : "pepe"};
-        let nuevoEvento = {"id":40,"fecha":"2019-12-21T00:00:00.000+0000","lugar":"lugar","tipo":"CHARLA","descripcion":"buenas saludsos","numeroMaxAsistentes":21,"organizador":"pepe"};
-        this.usuariosDAO.crearEvento(nuevoEvento);
+    introducirCredenciales() {
+        console.log(this.nombre);
+        console.log(this.pwd);
+        this.usuariosDAO = new UsuarioDAO(this.nombre, this.pwd);
+    }
+
+    registrarUsuario() {
+        console.log(this.nombreUsuarionuevo);
+        console.log(this.pwdNuevoUsuario);
+        console.log(this.emailNuevoUsuario);
+        let nuevoUsuario = {"nombre": this.nombreUsuarionuevo, "clave": this.pwdNuevoUsuario, "correo": this.emailNuevoUsuario};
+        this.usuarioPublicDAO.registrarUsuario(nuevoUsuario, this.nombreUsuarionuevo);
+
     }
 
     verEventosOrganizados(tiempo) {
         console.log("hola")
+        console.log(this.nombre);
         let evento;
         let eventosjson;
+        let titulotab;
+        if (tiempo == "pasado") {
+            titulotab = "ya celebrados"
+        } else {
+            titulotab = "por celebrar"
+        }
+
         this.usuariosDAO.eventosOrganizados(tiempo)
                 .then(eventoR => {
                     evento = eventoR;
                     this.listaEventos = [];
                     this.listaEventos = evento;
+                    this.tituloTabla = "Eventos organizados " + titulotab;
                     console.log(this.listaEventos);
                     console.log();
                     this.$scope.$apply();
@@ -284,13 +351,21 @@ class eventosController {
     verEventosInscritos(tiempo) {
         console.log("hola")
         let evento;
+        let titulotab;
+        if (tiempo == "pasado") {
+            titulotab = "ya celebrados"
+        } else {
+            titulotab = "por celebrar"
+        }
+
         this.usuariosDAO.eventosInscritos(tiempo)
                 .then(eventoR => {
                     this.listaEventos = eventoR;
                     console.log(this.listaEventos);
+                    this.tituloTabla = "Eventos inscritos " + titulotab;
                     this.$scope.$apply();
                 })
-               
+
 
     }
 
@@ -301,6 +376,7 @@ class eventosController {
                 .then(eventoR => {
                     evento = eventoR;
                     this.listaEventos = evento.contenidos;
+                    this.tituloTabla = "Eventos de tipo " + tipo;
                     console.log(this.listaEventos);
                     this.$scope.$apply();
                 })
@@ -311,10 +387,11 @@ class eventosController {
 
     verEventosPalabras() {
         console.log("hola")
-        let evento;
+        let evento = [];
         this.eventosDAO.eventosPalabra(this.palabras)
                 .then(eventoR => {
                     this.listaEventos = eventoR;
+
                     console.log(this.listaEventos);
                     this.$scope.$apply();
                 })
@@ -323,23 +400,49 @@ class eventosController {
 
     }
 
-    obtenerEvento() {
-        console.log("hola");
-        let evento;
+    creaEvento() {
 
-        this.usuariosDAO.eventosOrganizados("futuro")
-                .then(eventoR => {
-                    evento = eventoR;
-                })
-                .then(() => {
-                    console.log(evento);
-                });
-        console.log(evento);
+        var d = new Date(this.anio, this.mes, this.dia, this.hora, this.minutos, 0, 0);
+        let nuevoEvento = {"fecha": d, "lugar": this.lugar, "tipo": this.tipo, "descripcion": this.descripcion, "numeroMaxAsistentes": this.numAsistentes, "organizador": "pepe"};
+        this.usuariosDAO.crearEvento(nuevoEvento);
+        this.verEventosOrganizados("");
+    }
+
+    inscribirEvento(id) {
+        console.log("hola");
+        this.usuariosDAO.inscribirseEvento(id);
+        this.verEventosInscritos("default");
+    }
+
+    cancelarInscripcion(id) {
+        console.log("hola");
+        this.usuariosDAO.cancelarInscripcionEvento(id);
+        this.verEventosInscritos("default");
+    }
+
+    cancelarEvento(id) {
+        console.log("hola");
+        this.usuariosDAO.cancelarEvento(id);
+        this.verEventosOrganizados("default");
+    }
+
+//    obtenerEvento() {
+//        console.log("hola");
+//        let evento;
+//
+//        this.usuariosDAO.eventosOrganizados("futuro")
+//                .then(eventoR => {
+//                    evento = eventoR;
+//                })
+//                .then(() => {
+//                    console.log(evento);
+//                });
+//        console.log(evento);
 //                .then(response => {
 //                    console.log(response);
 //                    this.evento = response.json();
 //                })
-    }
+//    }
 
 }
 

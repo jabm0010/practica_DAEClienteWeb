@@ -33,7 +33,7 @@ and open the template in the editor.
                                 Mis eventos organizados
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <button data-ng-click="$ctrl.verEventosOrganizados('futuro')" class="dropdown-item" type="submit">Eventos organizados futuros</button>
+                                <button data-ng-click="$ctrl.verEventosOrganizados()" class="dropdown-item" type="submit">Eventos organizados futuros</button>
                                 <button data-ng-click="$ctrl.verEventosOrganizados('pasado')" class="dropdown-item" type="submit">Eventos organizados ya celebrados</button>
 
                             </div>
@@ -61,7 +61,7 @@ and open the template in the editor.
                             </div>
                         </li>
 
-                        <a class="nav-item nav-link" href="login.html">Login</a>
+                       
                         <a class="nav-item nav-link" href="registro.html">Registro</a>
 
                     </ul>
@@ -75,27 +75,77 @@ and open the template in the editor.
         </div>
 
         <div>
+
             <div class="row" style="margin-top:15px;">
                 <section class="col-md-1"></section>
-                <section class="jumbotron col-md-10">
+                <section class="jumbotron col-md-2">
+                    <h4>Introduzca credenciales</h4>
+                    <form>
+                        <div class="form-group">
+                            <label for="nombreUsuario">Nombre</label>
+                            <input data-ng-model="$ctrl.nombre" type="text" class="form-control" id="exampleInputEmail1"  placeholder="Nombre">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="pwdUsuario">Contraseña</label>
+                            <input data-ng-model="$ctrl.pwd" type="password" class="form-control" id="pwdUsuario" placeholder="Contraseña">
+                        </div>
+
+                        <button data-ng-click="$ctrl.introducirCredenciales()" type="submit" class="btn btn-primary">Login</button>
+                    </form>
+
+                </section>
+                <section class="col-md-1"></section>
+                <section class="jumbotron col-md-7">
+                      <h2>Crear un evento</h2>
                     <form>
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="inputDescripcion">Descripcion</label>
                                 <input data-ng-model="$ctrl.descripcion" type="text" class="form-control">
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label for="inputLugar">Lugar</label>
                                 <input data-ng-model="$ctrl.lugar" type="text" class="form-control" >
                             </div>
 
-                            <div class="form-group col-md-4">
-                                <label for="inputFecha">Fecha</label>
-                                <input data-ng-model="$ctrl.fecha" type="text" class="form-control">
+                            <div class="form-group col-md-3">
+                                <label for="inputTipo">Tipo</label>
+                                <input data-ng-model="$ctrl.tipo" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputnumAsistentes">Número asistentes</label>
+                                <input data-ng-model="$ctrl.numAsistentes" type="text" class="form-control">
                             </div>
                         </div>
- 
-                        <button data-ng-click="$ctrl.creaEvento()" type="submit" class="btn btn-primary">Sign in</button>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="inputanio">Año</label>
+                                <input data-ng-model="$ctrl.anio" type="number" class="form-control">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputmes">Mes</label>
+                                <input data-ng-model="$ctrl.mes" type="number" class="form-control" >
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputdia">Día</label>
+                                <input data-ng-model="$ctrl.dia" type="number" class="form-control" >
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputhora">Hora</label>
+                                <input data-ng-model="$ctrl.hora" type="number" class="form-control" >
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputmins">Minutos</label>
+                                <input data-ng-model="$ctrl.minutos" type="number" class="form-control" >
+                            </div>
+                       
+                            <div class="col-md-2" style="margin-top:30px;">
+                                <button data-ng-click="$ctrl.creaEvento()" type="submit" class="btn btn-primary">Crear evento</button>
+                            </div>
+                        </div>
+
+
                     </form>
                 </section>
             </div>
@@ -105,17 +155,18 @@ and open the template in the editor.
                 <section class="col-md-1"></section>
                 <section class="col-md-10">
 
-
+                    <h2>{{$ctrl.tituloTabla}}</h2>
                     <table class="table table-striped table-hover">
                         <thead>
+
                             <tr><th>Descripción</th><th>Fecha</th><th>Lugar</th><th>Nº de asistentes máximo</th> <th>Organizador</th> <th>Tipo de evento</th>
 
                             </tr>
                         </thead>
                         <tr class="e-pointer" data-ng-repeat="e in $ctrl.listaEventos">
-                            <td>{{e.id}}></td> <td>{{e.fecha}}</td> <td>{{e.lugar}}</td> <td>{{e.numeroMaxAsistentes}}</td> <td>{{e.organizador}}</td><td>{{e.tipo}}</td>
-                            <td><button type="button" class="btn btn-primary">Inscribirme</button></td><td><button type="button" class="btn btn-danger">Cancelar inscripcion</button></td>
-                            <td><button type="button" class="btn btn-dark">Cancelar evento</button></td>
+                            <td>{{e.id}}</td> <td>{{e.fecha}}</td> <td>{{e.lugar}}</td> <td>{{e.numeroMaxAsistentes}}</td> <td>{{e.organizador}}</td><td>{{e.tipo}}</td>
+                            <td><button data-ng-click="$ctrl.inscribirEvento(e.id)" type="button" class="btn btn-primary">Inscribirme</button></td><td><button data-ng-click="$ctrl.cancelarInscripcion(e.id)" type="button" class="btn btn-danger">Cancelar inscripcion</button></td>
+                            <td><button data-ng-click="$ctrl.cancelarEvento(e.id)" type="button" class="btn btn-dark">Cancelar evento</button></td>
                         </tr>
                     </table>
 
