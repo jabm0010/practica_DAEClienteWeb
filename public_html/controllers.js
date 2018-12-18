@@ -6,16 +6,26 @@ class EventosDAO
         this.url_evento = "https://localhost:8443/eventos";
     }
 
+//    eventosPalabra(palabras)
+//    {
+//        let query_string = "";
+//
+//        for (let i in palabras)
+//        {
+//            query_string += "palabras=" + palabras[i] + "&";
+//            if (i == palabras.length - 1)
+//                query_string += "palabras=" + palabras[i];
+//        }
+//
+//        return fetch(this.url_evento + "?" + query_string)
+//                .then(response => this.getStatus(response))
+//                .then(response => this.checkResponse(response));
+//
+//    }
+
     eventosPalabra(palabras)
     {
-        let query_string = "";
-
-        for (let i in palabras)
-        {
-            query_string += "palabras=" + palabras[i] + "&";
-            if (i == palabras.length - 1)
-                query_string += "palabras=" + palabras[i];
-        }
+        let query_string = "palabras=" + palabras;
 
         return fetch(this.url_evento + "?" + query_string)
                 .then(response => this.getStatus(response))
@@ -269,10 +279,10 @@ class eventosController {
         this.eventosDAO = new EventosDAO();
         this.usuariosDAO = new UsuarioDAO(this.nombre, this.pwd);
         this.usuarioPublicDAO = new UsuarioPublicDAO();
-      
+
         this.nuevoevento = {};
-       
-        this.palabras = [];
+
+        this.palabras;
 
         this.tituloTabla;
         this.descripcion;
@@ -383,7 +393,9 @@ class eventosController {
         let evento = [];
         this.eventosDAO.eventosPalabra(this.palabras)
                 .then(eventoR => {
-                    this.listaEventos = eventoR;
+                    evento = eventoR;
+                    this.listaEventos = evento.contenidos;
+                    this.tituloTabla = "Eventos con la palabra '" + this.palabras+"'";
 
                     console.log(this.listaEventos);
                     this.$scope.$apply();
@@ -412,7 +424,8 @@ class eventosController {
     cancelarInscripcion(id) {
         console.log("hola");
         this.usuariosDAO.cancelarInscripcionEvento(id);
-        this.verEventosInscritos("default");;
+        this.verEventosInscritos("default");
+        ;
 
 
 
