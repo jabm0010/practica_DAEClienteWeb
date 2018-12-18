@@ -261,12 +261,7 @@ class UsuarioDAO
 
 class eventosController {
     constructor($scope) {
-//        this.listaEventos = [
-//            {id: '1', descripcion: 'Charla de cosas', lugar: "jaen"},
-//            {id: '2', descripcion: 'Charla de cosas', lugar: "jaen"},
-//            {id: '3', descripcion: 'Charla de cosas', lugar: "jaen"}
-//        ];
-        // this.listaEventos = [{"id":2,"fecha":"2019-12-21T00:00:00.000+0000","lugar":"lugar","tipo":"CHARLA","descripcion":"descripcion","numeroMaxAsistentes":21,"organizador":"pepe"},{"id":8,"fecha":"2020-12-14T11:05:43.275+0000","lugar":"jaen","tipo":"CHARLA","descripcion":"p","numeroMaxAsistentes":30,"organizador":"pepe"},{"id":10,"fecha":"2027-04-04T03:06:00.000+0000","lugar":"7","tipo":"CHARLA","descripcion":"8","numeroMaxAsistentes":20,"organizador":"pepe"}];
+
         this.$scope = $scope;
         this.nombre;
         this.pwd;
@@ -274,14 +269,12 @@ class eventosController {
         this.eventosDAO = new EventosDAO();
         this.usuariosDAO = new UsuarioDAO(this.nombre, this.pwd);
         this.usuarioPublicDAO = new UsuarioPublicDAO();
-        //this.obtenerEvento();
+      
         this.nuevoevento = {};
-        // this.url_evento = "http://localhost:8080/evento";
+       
         this.palabras = [];
 
         this.tituloTabla;
-
-        //Variables creación evento
         this.descripcion;
         this.numAsistentes;
         this.lugar;
@@ -405,25 +398,32 @@ class eventosController {
         var d = new Date(this.anio, this.mes, this.dia, this.hora, this.minutos, 0, 0);
         let nuevoEvento = {"fecha": d, "lugar": this.lugar, "tipo": this.tipo, "descripcion": this.descripcion, "numeroMaxAsistentes": this.numAsistentes, "organizador": "pepe"};
         this.usuariosDAO.crearEvento(nuevoEvento);
-        this.verEventosOrganizados("");
+        this.verEventosOrganizados("default");
+        ;
     }
 
     inscribirEvento(id) {
         console.log("hola");
         this.usuariosDAO.inscribirseEvento(id);
         this.verEventosInscritos("default");
+
     }
 
     cancelarInscripcion(id) {
         console.log("hola");
         this.usuariosDAO.cancelarInscripcionEvento(id);
-        this.verEventosInscritos("default");
+        this.verEventosInscritos("default");;
+
+
+
+
     }
 
     cancelarEvento(id) {
         console.log("hola");
         this.usuariosDAO.cancelarEvento(id);
         this.verEventosOrganizados("default");
+
     }
 
 //    obtenerEvento() {
